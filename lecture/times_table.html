@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      class Problems extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            num1: Math.ceil( Math.random() * 9 ),
+            num2: Math.ceil( Math.random() * 9 ),
+            answer: '',
+            result: '',
+          }
+        }
+
+        render() {
+          return (
+            <>
+              <div>{ this.state.num1 } 곱하기 { this.state.num2 }는? </div>
+              <form onSubmit={ (e) => {
+                e.preventDefault();
+                if( this.state.num1 * this.state.num2 === parseInt(this.state.answer) ) {
+                  this.setState( {
+                    num1: Math.ceil( Math.random() * 9 ),
+                    num2: Math.ceil( Math.random() * 9 ),
+                    result: '딩동댕',
+                    answer: '',
+                  });
+                } else {
+                  this.setState( {
+                    result: '땡',
+                    answer: '',
+                  });
+                }
+                
+              }}>
+                <input type="number" value={this.state.answer} onChange={(e) => { this.setState({ answer: e.target.value })} }/>
+                <button type="submit">입력!</button>  
+              </form>
+              <div>{this.state.result}</div>
+            </>
+            );
+        }
+      }
+    </script>
+    <script type="text/babel">
+      ReactDOM.render(<Problems />, document.querySelector('#root'));
+    </script>
+  </body>
+</html>
