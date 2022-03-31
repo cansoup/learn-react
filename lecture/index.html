@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const e = React.createElement;
+
+      // LikeButton이라는 컴포넌트를 구성한다. 실제로 그리지는 않음
+      class LikeButton extends React.Component {
+        constructor(props) {
+          super(props);
+          // state : 바뀔 여지가 있는 부분들
+          this.state = {
+            liked: false,
+          }
+        }
+
+        render() {
+          return e('button', 
+          { onClick: () => { this.setState({ liked: true }) }, type: 'submit' },
+          // liked 값에 따라 화면의 출력을 변경한다.
+          this.state.liked ? 'Liked' : 'Like' ); // <button>Like</button>
+        }
+      }
+    </script>
+    <script>
+      // ReactDOM : 화면에 실제로 반영
+      ReactDOM.render(e(LikeButton), document.querySelector('#root'));
+    </script>
+  </body>
+</html>
