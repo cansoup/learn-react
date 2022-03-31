@@ -19,28 +19,31 @@
           }
         }
 
+        onSubmit = (e) => {
+          e.preventDefault();
+          if( this.state.num1 * this.state.num2 === parseInt(this.state.answer) ) {
+            this.setState( {
+              num1: Math.ceil( Math.random() * 9 ),
+              num2: Math.ceil( Math.random() * 9 ),
+              result: '딩동댕',
+              answer: '',
+            });
+          } else {
+            this.setState( {
+              result: '땡',
+              answer: '',
+            });
+          }
+        }
+
+        onChange = (e) => { this.setState({ answer: e.target.value })};
+
         render() {
           return (
             <>
               <div>{ this.state.num1 } 곱하기 { this.state.num2 }는? </div>
-              <form onSubmit={ (e) => {
-                e.preventDefault();
-                if( this.state.num1 * this.state.num2 === parseInt(this.state.answer) ) {
-                  this.setState( {
-                    num1: Math.ceil( Math.random() * 9 ),
-                    num2: Math.ceil( Math.random() * 9 ),
-                    result: '딩동댕',
-                    answer: '',
-                  });
-                } else {
-                  this.setState( {
-                    result: '땡',
-                    answer: '',
-                  });
-                }
-                
-              }}>
-                <input type="number" value={this.state.answer} onChange={(e) => { this.setState({ answer: e.target.value })} }/>
+              <form onSubmit={ this.onSubmit }>
+                <input type="number" value={this.state.answer} onChange={ this.onChange }/>
                 <button type="submit">입력!</button>  
               </form>
               <div>{this.state.result}</div>
