@@ -8,6 +8,7 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
+      // state가 변경되면 함수 전체가 재실행된다.
       const Problems = () => {
         const [num1, setNum1] = React.useState(Math.ceil(Math.random()*9));
         const [num2, setNum2] = React.useState(Math.ceil(Math.random()*9));
