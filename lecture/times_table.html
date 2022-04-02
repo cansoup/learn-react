@@ -35,6 +35,7 @@
             // 코드 가독성 향상
 
             // setState는 비동기 -> setState
+            // setState가 일어나면 render함수가 실행된다 -> 성능 최적화 문제
             this.setState( (prevState) => {
               return {
                 num1: Math.ceil( Math.random() * 9 ),
