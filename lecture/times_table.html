@@ -43,11 +43,14 @@
                 answer: '',
               }
             });
+            // === document.queryselector
+            this.autoFocus.focus()
           } else {
             this.setState( {
               result: '땡',
               answer: '',
             });
+            this.autoFocus.focus()
           }
         }
 
@@ -59,7 +62,7 @@
             <>
               <div>{ this.state.num1 } 곱하기 { this.state.num2 }는? </div>
               <form onSubmit={ this.onSubmit }>
-                <input type="number" value={this.state.answer} onChange={ this.onChange }/>
+                <input ref={(c) => {this.autoFocus = c;}} type="number" value={this.state.answer} onChange={ this.onChange }/>
                 <button type="submit">입력!</button>  
               </form>
               <div>{this.state.result}</div>
