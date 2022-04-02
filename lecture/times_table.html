@@ -9,24 +9,39 @@
     <div id="root"></div>
     <script type="text/babel">
       class Problems extends React.Component {
-        constructor(props) {
-          super(props);
-          this.state = {
-            num1: Math.ceil( Math.random() * 9 ),
-            num2: Math.ceil( Math.random() * 9 ),
-            answer: '',
-            result: '',
-          }
+        // constructor는 실무에서 잘 사용하지 않음 
+        // constructor(props) {
+        //   super(props);
+        //   this.state = {
+        //     num1: Math.ceil( Math.random() * 9 ),
+        //     num2: Math.ceil( Math.random() * 9 ),
+        //     answer: '',
+        //     result: '',
+        //   }
+        // }
+        state = {
+          num1: Math.ceil( Math.random() * 9 ),
+          num2: Math.ceil( Math.random() * 9 ),
+          answer: '',
+          result: '',
         }
 
+        // 화살표 함수를 사용하지 않으면 this가 달라짐
         onSubmit = (e) => {
           e.preventDefault();
           if( this.state.num1 * this.state.num2 === parseInt(this.state.answer) ) {
-            this.setState( {
-              num1: Math.ceil( Math.random() * 9 ),
-              num2: Math.ceil( Math.random() * 9 ),
-              result: '딩동댕',
-              answer: '',
+            // this.setState를 함수형으로 사용하면 prevState 활용 가능
+            // prevState: 예전 state값
+            // 코드 가독성 향상
+
+            // setState는 비동기 -> setState
+            this.setState( (prevState) => {
+              return {
+                num1: Math.ceil( Math.random() * 9 ),
+                num2: Math.ceil( Math.random() * 9 ),
+                result: `정답은 ${prevState.answer}`,
+                answer: '',
+              }
             });
           } else {
             this.setState( {
@@ -40,6 +55,7 @@
 
         render() {
           return (
+            // React.Fragment <></>
             <>
               <div>{ this.state.num1 } 곱하기 { this.state.num2 }는? </div>
               <form onSubmit={ this.onSubmit }>
@@ -48,7 +64,7 @@
               </form>
               <div>{this.state.result}</div>
             </>
-            );
+          );
         }
       }
     </script>
