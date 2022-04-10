@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, memo } from 'react';
 import { render } from 'react-dom';
 
-export default function Try({ tryInfo}) {
+const Try = memo(({ tryInfo }) => {
   return (
     <>
       <li>
@@ -10,4 +10,6 @@ export default function Try({ tryInfo}) {
       </li>
     </>
   )
-}
+});
+
+export default Try;

@@ -18,7 +18,7 @@ export default function NumberBaseball() {
   const [value, setValue] = useState('');
   const [answer, setAnser] = useState(getNumbers());
   const [tries, setTries] = useState([]);
-
+  
   const onSubmit = (e) => {
     e.preventDefault();
     if(value === answer.join('')) { // 정답
