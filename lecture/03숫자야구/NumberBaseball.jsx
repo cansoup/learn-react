@@ -2,7 +2,15 @@ import React, { useState, useRef } from 'react';
 import Try from './Try';
 
 function getNumbers() {
+  const candidate = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const array = [];
 
+  for(let i = 0; i < 4; i += 1) {
+    const chosen = candidate.splice(Math.floor(Math.random() * (9 - i)), 1)[0];
+    array.push(chosen);
+  }
+
+  return array;
 }
 
 export default function NumberBaseball() {
@@ -11,7 +19,38 @@ export default function NumberBaseball() {
   const [answer, setAnser] = useState(getNumbers());
   const [tries, setTries] = useState([]);
 
-  const onSubmit = () => {
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if(value === answer.join('')) { // 정답
+      setResult('홈런!');
+      // 리액트는 참조가 바뀌는 것을 감지하여 렌더 함수를 실행한다.
+      setTries([...tries, {try: value, result: '홈런!'}],);
+      alert('게임을 다시 시작합니다');
+        setValue('');
+        setAnser(getNumbers());
+        setTries([]);
+    } else { // 실패
+      const answerArray = value.split('').map((v) => parseInt(v));
+      let strike = 0;
+      let ball = 0;
+      if(tries.length >= 9) {
+        setResult(`게임에 패배하였습니다. 답은 ${answer.join(', ')} 입니다.`);
+        alert('게임을 다시 시작합니다');
+        setValue('');
+        setAnser(getNumbers());
+        setTries([]);
+      } else {
+        for(let i = 0; i < 4; i +=1) {
+          if(answerArray[i] === answer[i]){
+            strike += 1;
+          } else if(answer.includes(answerArray[i])) {
+            ball += 1;
+          }
+        }
+        setTries([...tries, {try: value, result: `${strike} 스트라이크, ${ball} 볼`}]);
+        setValue('');
+      }
+    }
 
   }; 
 
@@ -28,9 +67,9 @@ export default function NumberBaseball() {
       </form>
       <div>시도: { tries.length }</div>
       <ul>
-        { ['like', 'like'].map((value, index) => {
+        { tries.map((value, index) => {
           return (
-            <Try value={value} index={index} key={`${value}-${index}`}/>
+            <Try tryInfo={value} index={index} key={`${index+1}차 시도`}/>
           )
         }) }
       </ul>

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 
-export default function Try({value, index}) {
+export default function Try({ tryInfo}) {
   return (
     <>
-      <li>{value} - {index}</li>
+      <li>
+        <div>{tryInfo.try}</div>
+        <div>{tryInfo.result}</div>
+      </li>
     </>
   )
 }
