@@ -18,6 +18,7 @@ export default function NumberBaseball() {
   const [value, setValue] = useState('');
   const [answer, setAnser] = useState(getNumbers());
   const [tries, setTries] = useState([]);
+  const inputRef = useRef(null);
   
   const onSubmit = (e) => {
     e.preventDefault();
@@ -51,7 +52,7 @@ export default function NumberBaseball() {
         setValue('');
       }
     }
-
+    inputRef.current.focus();
   }; 
 
   const onChangeInput = (e) => {
@@ -62,7 +63,7 @@ export default function NumberBaseball() {
     <>
       <h1>{ result }</h1>
       <form onSubmit={ onSubmit }>
-        <input maxLength={ 4 } type="text" value={ value } onChange={ onChangeInput }></input>
+        <input id="wordInput" className="wordInput" ref={inputRef} maxLength={ 4 } type="text" value={ value } onChange={ onChangeInput }></input>
         <button type="submit">입력!</button>
       </form>
       <div>시도: { tries.length }</div>

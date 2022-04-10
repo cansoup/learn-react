@@ -74,3 +74,6 @@
   - [공식문서](https://ko.reactjs.org/docs/react-api.html#reactpurecomponent)
 - `memo`
   - hooks의 PureComponent
+- `React.createRef()`
+  - class의 ref를 hooks처럼 사용하는 방법
+- `render`에서 setState 사용X - 무한루프를 야기한다.
