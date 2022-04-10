@@ -47,7 +47,7 @@ export default function NumberBaseball() {
             ball += 1;
           }
         }
-        setTries([...tries, {try: value, result: `${strike} 스트라이크, ${ball} 볼`}]);
+        setTries((prevTries) => [...prevTries, {try: value, result: `${strike} 스트라이크, ${ball} 볼`}]);
         setValue('');
       }
     }
