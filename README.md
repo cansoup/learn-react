@@ -77,3 +77,5 @@
 - `React.createRef()`
   - class의 ref를 hooks처럼 사용하는 방법
 - `render`에서 setState 사용X - 무한루프를 야기한다.
+- `useEffect`
+  - [블로그](https://ko-de-dev-green.tistory.com/18)

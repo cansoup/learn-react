@@ -1,4 +1,7 @@
-import React, { Component } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+
+/** 훅스는 라이프사이클이 존재하지 않는다. */
+/** useEffect : componentDidMount 등 라이프싸이클 함수와 비슷한 역할을 수행한다. */
 
 const rspCoords = {
   바위: '0',
@@ -17,103 +20,66 @@ const computerChoice = (imgCoord) => {
     return v[1] === imgCoord;
   })[0];
 }
-class RockSicssorPaper extends Component {
-  state = {
-    result: '',
-    imgCoord: '0',
-    score: 0,
-  }
-  
-  interval;
 
-  /** COMPONENT LIFECYCLE */
-  /** 클래스: constructor -> render -> ref -> componentDidMount -> setState/props 바뀔 때 -> shouldComponentUpdate(true)
-   *  -> render -> componentDidUpdate -> 부모 컴포넌트에서 제거될 때 -> componentWillUnmount -> 소멸
-   */
-  /** class형 React에서 render함수가 실행되면 react가 jsx를 돔에 구현된다 */
-  /** 돔에 구현되는 순간 특정 action을 실행할 수 있다 */
-  /** render()가 처음 실행되면 componentDidMount가 실행된다 */
-  /** setState 등으로 render()가 다시 실행될 때 componentDidMount는 다시 실행되지 않는다 */
-  componentDidMount() {
-    // 비동기 요청
-    // 비동기 요청에서 스코프 외부의 값을 사용하면 오류가 발생한다.(클로저 문제)
-    this.interval = setInterval(this.changeHand, 100);
-  }
+export default function RockSicssorPaper() {
+  const [result, setResult] = useState('');
+  const [imgCoord, setImgCoord] = useState(rspCoords.바위);
+  const [score, setScore] = useState(0);
+  const interval = useRef();
 
-  /** render()가 다시 실행되었을 때 실행된다 */
-  componentDidUpdate() {
+  /** useEffect를 여러번 사용 가능하다. */
+  useEffect(() => { // componentDidMont, componentDidUpdate의 역할을 수행한다(1대 1 대응 X)
+    interval.current = setInterval(changeHand, 100);
+    return () => { //componentWillUnmount 역할
+      clearInterval(interval.current);
+    }
+  }, [imgCoord]);
+  // 두 번째 인수 배열에 넣은 값(예제에서는 imgCoord)들이 바뀔 때 useEffect가 실행된다.
+  // - 빈 배열인 경우에도 setInterval은 실행되므로 changeHand는 계속 실행된다. 
+  // - 그림이 바뀌지 않는 이유는 changeHand 내부의 imgCoord가 바뀌지 않기 때문이다.
+  // - changeHand가 실행될 때 imgCoord를 바꾸기 위해 두 번째 인자로 [imgCoord]가 필요하다
 
-  }
-
-  /** 컴포넌트가 제거되기 직전에 실행된다 */
-  componentWillUnmount() {
-    // 비동기 요청 정리
-    clearInterval(this.interval);
-  }
-
-  changeHand = () => {
-    const {imgCoord} = this.state;
+  const changeHand = () => {
     if(imgCoord === rspCoords.바위) {
-      this.setState({
-        imgCoord: rspCoords.가위,
-      })
+      setImgCoord(rspCoords.가위);
     } else if(imgCoord === rspCoords.가위) {
-      this.setState({
-        imgCoord: rspCoords.보
-      })
+      setImgCoord(rspCoords.보);
     } else if(imgCoord === rspCoords.보) {
-      this.setState({
-        imgCoord: rspCoords.바위
-      })
+      setImgCoord(rspCoords.바위);
     }
   }
 
-  onClickBtn = (choice) => {
-    const {imgCoord} = this.state
-    clearInterval(this.interval);
+  /** 고차함수 */
+  const onClickBtn = (choice) => () => {
+    clearInterval(interval.current);
     const myScore = scores[choice];
     const cpuScore = scores[computerChoice(imgCoord)];
     const diff = myScore - cpuScore;
     if(diff === 0) {
-      this.setState({
-        result: '비겼습니다!',
-      })
+      setResult('비겼습니다!');
     } else if([-1, 2].includes(diff)) {
-      this.setState((prevState) => {
-        return {
-          result: '이겼습니다!',
-          score: prevState.score + 1,
-        }
-      })
+      setResult('이겼습니다!');
+      setScore((prevScore) => prevScore + 1);
     } else {
-      this.setState((prevState) => {
-        return {
-          result: '졌습니다!',
-          score: prevState.score -1,
-        }
-      })
+      setResult('졌습니다!');
+      setScore(prevScore => prevScore - 1);
     }
     setTimeout(() => {
-      this.interval = setInterval(this.changeHand, 100);
+      interval.current = setInterval(changeHand, 100);
     }, 2000)
   }
 
-  render() {
-    const { result, score, imgCoord} = this.state;
-    return (
-      <>
-        <div id="computer" style={{ background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0` }} />
-        <div>
-          <button id="rock" className='btn' onClick={() => this.onClickBtn('바위')}>바위</button>
-          <button id="scissor" className='btn' onClick={() => this.onClickBtn('가위')}>가위</button>
-          <button id="paper" className='btn' onClick={() => this.onClickBtn('보')}>보</button>
-        </div>
-        <div>{result}</div>
-        <div>현재 {score}점</div>
-      </>
-    )
-  }
-}
-
-export default RockSicssorPaper;
+  return(
+    <>
+      <div id="computer" style={{ background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0` }} />
+      <div>
+        <button id="rock" className='btn' onClick={onClickBtn('바위')}>바위</button>
+        <button id="scissor" className='btn' onClick={onClickBtn('가위')}>가위</button>
+        <button id="paper" className='btn' onClick={onClickBtn('보')}>보</button>
+      </div>
+      <div>{result}</div>
+      <div>현재 {score}점</div>
+    </>
+  )
+};
 
