@@ -79,3 +79,29 @@
 - `render`에서 setState 사용X - 무한루프를 야기한다.
 - `useEffect`
   - [블로그](https://ko-de-dev-green.tistory.com/18)
+- `Hooks`
+  - 훅스의 순서는 매우 중요하다. 무조건 최상위로 유지한다.
+    - 조건문 안에는 절대 넣으면 안 된다.
+    - 함수나 반복문 안에도 웬만하면 넣지 않는 것이 좋다.
+  - useEffect, useMemo, useCallback 안에서 useState를 사용하면 안 된다.
+- Hooks React Coding 패턴
+  
+  ```javascript
+    // componentDidMount
+    useEffect(() => {
+      // ajax
+    }, []);
+  ```
+
+  ```javascript
+    // componentDidUpdate에서만 실행하고 싶을 때 다음과 같은 패턴을 사용한다.
+    // useEffect가 실행되면 componentDidMount는 무조건 실행되므로, componentDidMount에서는 아무것도 실행하지 않도록 조건문을 삽입한다.
+    const mounted = useRef(false);
+    useEffect(()=> {
+      if(!mounted.current) {
+        mounted.current = true
+      } else {
+        // ajax
+      }
+    }, [바뀌는 값]);
+  ```
